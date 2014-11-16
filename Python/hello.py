@@ -1,14 +1,17 @@
 #!usr/bin/env python3
 
 
-def main():
+def main() -> int:
     """
 
     :rtype : object
     """
     print("Hello, Vince!")
-    # #TODO simulate a car...
+    print("I changed some stuff")
+    # TODO simulate a car...
+    return 4
 
 
 if __name__ == "__main__":
-    main()
+    # regular comment
+    print(main())
