@@ -4,7 +4,7 @@
 def main() -> int:
     """
 
-    :rtype : object
+    :rtype : int
     """
     print("Hello, Vince!")
     print("I changed some stuff")
