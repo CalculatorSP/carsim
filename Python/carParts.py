@@ -11,14 +11,21 @@ class Environment(object):
 
 
 class Frame(object):
-    def __init__(self, wheelbase, weight, frontal_area, drag_coefficient, rear_weight_distr, ground_to_cg):
+    def __init__(self, wheelbase, mass, frontal_area, drag_coefficient, rear_weight_distr, ground_to_cg):
         self.wheelbase = wheelbase
-        self.weight = weight
+        self.mass = mass
         self.frontalArea = frontal_area
         self.dragCoefficient = drag_coefficient
-        self.rearWeightDistribution = rear_weight_distr
-        self.frontToCG = rear_weight_distr * self.wheelbase
+        self.staticRearWeightDistr = rear_weight_distr
         self.groundToCG = ground_to_cg
+
+        self.frontToCG = self.staticRearWeightDistr * self.wheelbase
+        self.dynamicRearWeightDistr = self.staticRearWeightDistr
+
+
+    def update(self, vehicle):
+        # TODO figure out a better way to calculate rear weight
+        pass
 
 
 class Engine(object):
@@ -44,7 +51,7 @@ class Gearbox(object):
             self.activeGear = vehicle.shifter.selected_gear
 
     def get_active_gear_ratio(self):
-        return self.gearRatios(self.activeGear)
+        return self.gearRatios(self.activeGear) * self.primaryDrive * self.finalDrive
 
 
 class Shifter(object):
@@ -78,13 +85,20 @@ class Accelerator(object):
 
 
 class Wheel(object):
-    def __init__(self, radius, static_friction):
+    def __init__(self, radius, static_friction, kinetic_friction):
         self.radius = radius
         self.staticFriction = static_friction
+        self.kineticFriction = kinetic_friction
         self.rpm = 0.0
+        self.torque = 0.0
+        self.force = 0.0
 
-    def update(self, vehicle):
+    def update_rpm(self, vehicle):
         self.rpm = vehicle.velocity / self.radius * 30.0 / math.pi
+
+    def update_torque(self, vehicle):
+        self.torque = vehicle.engine.torque * vehicle.gearbox.get_active_gear_ratio()
+        self.force = self.torque / self.radius
 
 
 class Vehicle(object):
@@ -102,9 +116,11 @@ class Vehicle(object):
         self.acceleration = 0.0
 
     def update(self, time_step):
-        self.wheel.update(self)
         self.gearbox.update(self)
+
+        self.wheel.update_rpm(self)
         self.engine.update(self)
+        self.wheel.update_torque(self)
 
 
 class Driver(object):

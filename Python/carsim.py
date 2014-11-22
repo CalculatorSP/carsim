@@ -7,6 +7,7 @@ from carParts import *
 # Wheel Parameters
 RADIUS = 5.0 / 12
 STATIC_FRICTION = 1.0
+KINETIC_FRICTION = 1.0
 
 # Frame Parameters
 WHEELBASE = 71.26 / 12
@@ -46,7 +47,7 @@ def main():
     shifter = Shifter(len(GEAR_RATIOS))
     clutch = Clutch()
     accelerator = Accelerator()
-    wheel = Wheel(RADIUS, STATIC_FRICTION)
+    wheel = Wheel(RADIUS, STATIC_FRICTION, KINETIC_FRICTION)
 
     car = Vehicle(environment, frame, engine, gearbox, shifter, clutch, accelerator, wheel)
     driver = Driver()
