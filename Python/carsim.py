@@ -15,7 +15,7 @@ WEIGHT = 600.0
 FRONTAL_AREA = 13.8
 DRAG_COEFFICIENT = 0.5
 REAR_WEIGHT_DISTR = 0.6
-GROUND_TO_CG = 13.0 / 12
+HEIGHT = 13.0 / 12
 
 # Gearbox Parameters
 GEAR_RATIOS = {
@@ -41,7 +41,7 @@ FINISH_LINE = 256.063
 
 def main():
     environment = Environment(AIR_DENSITY, GRAVITY)
-    frame = Frame(WHEELBASE, WEIGHT, FRONTAL_AREA, DRAG_COEFFICIENT, REAR_WEIGHT_DISTR, GROUND_TO_CG)
+    frame = Frame(WHEELBASE, WEIGHT, FRONTAL_AREA, DRAG_COEFFICIENT, REAR_WEIGHT_DISTR, HEIGHT)
     engine = Engine()
     gearbox = Gearbox(GEAR_RATIOS, PRIMARY_DRIVE, FINAL_DRIVE)
     shifter = Shifter(len(GEAR_RATIOS))
@@ -51,7 +51,7 @@ def main():
 
     car = Vehicle(environment, frame, engine, gearbox, shifter, clutch, accelerator, wheel)
     driver = Driver()
-    driver.drive_to_finish(car, FINISH_LINE, TIME_STEP)
+    print(driver.drive_to_finish(car, FINISH_LINE, TIME_STEP))
 
 
 if __name__ == "__main__":
